@@ -6,6 +6,20 @@
 	color: var(--primary-color);
 }
 
+.card-text {
+	display: -webkit-box;
+	-webkit-line-clamp: 6;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* .tooltip {
+	display: inline-block;
+	position: relative;
+	border-bottom: 1px dotted #666;
+	text-align: left;
+} */
+
 /* Add box shadow on card hover */
 .posts-section .post-item:hover {
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);

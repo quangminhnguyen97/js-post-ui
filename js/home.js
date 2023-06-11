@@ -1,6 +1,9 @@
 import postApi from './api/postApi'
 import { getTextContent } from './utils'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
+dayjs.extend(relativeTime)
 function createPostItem(data) {
 	const template = document.getElementById('postTemplate')
 	if (!template) return
@@ -9,6 +12,7 @@ function createPostItem(data) {
 	getTextContent(liElement, "[data-id='title']", data.title)
 	getTextContent(liElement, "[data-id='author']", data.author)
 	getTextContent(liElement, "[data-id='description']", data.description)
+	getTextContent(liElement, "[data-id='timeSpan']", `- ${dayjs(data.createdAt).fromNow()}`)
 
 	const thumbnailElement = liElement.querySelector('[data-id="thumbnail"]')
 	thumbnailElement.src = data.imageUrl
