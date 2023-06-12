@@ -123,10 +123,13 @@ function initSearch() {
 
 ;(async () => {
 	try {
+		const url = new URL(window.location)
+		if (!url.searchParams.get('_page')) url.searchParams.set('_page', 1)
+		if (!url.searchParams.get('_limit')) url.searchParams.set('_limit', 6)
+		history.pushState({}, '', url)
+		const queryParams = url.searchParams
 		initSearch()
 		initPagination()
-		initQueryParams()
-		const queryParams = new URLSearchParams(window.location.search)
 		const { data, pagination } = await postApi.getAll(queryParams)
 		renderPostList(data)
 		renderPagination(pagination)
