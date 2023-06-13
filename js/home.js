@@ -1,60 +1,9 @@
-import postApi from './api/postApi'
-import { getPostPagination, getTextContent } from './utils'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import debounce from 'lodash.debounce'
+import postApi from './api/postApi'
+import { initPagination, renderPagination, initSearch, renderPostList } from './utils'
 
 dayjs.extend(relativeTime)
-function createPostItem(data) {
-	const template = document.getElementById('postTemplate')
-	if (!template) return
-	const liElement = template.content.firstElementChild.cloneNode(true)
-
-	getTextContent(liElement, "[data-id='title']", data.title)
-	getTextContent(liElement, "[data-id='author']", data.author)
-	getTextContent(liElement, "[data-id='description']", data.description)
-	getTextContent(liElement, "[data-id='timeSpan']", `- ${dayjs(data.createdAt).fromNow()}`)
-
-	const thumbnailElement = liElement.querySelector('[data-id="thumbnail"]')
-
-	if (thumbnailElement) {
-		thumbnailElement.src = data.imageUrl
-		thumbnailElement.addEventListener('error', () => {
-			thumbnailElement.src = 'https://placehold.co/1368x400?text=Haizza'
-		})
-	}
-
-	return liElement
-}
-
-function renderPostList(postList) {
-	if (!Array.isArray(postList)) return
-	const ulElement = document.getElementById('postsList')
-	if (!ulElement) return
-
-	ulElement.textContent = ''
-
-	postList.forEach((item, idx) => {
-		const postItem = createPostItem(item)
-		ulElement.appendChild(postItem)
-	})
-}
-
-function renderPagination(pagination) {
-	const ulElement = getPostPagination()
-	if (!pagination || !ulElement) return
-	const { _page, _limit, _totalRows } = pagination
-	const totalPages = Math.ceil(_totalRows / _limit)
-
-	ulElement.dataset.page = _page
-	ulElement.dataset.totalPages = totalPages
-
-	if (_page <= 1) ulElement.firstElementChild.classList.add('disabled')
-	else ulElement.firstElementChild.classList.remove('disabled')
-
-	if (_page >= totalPages) ulElement.lastElementChild.classList.add('disabled')
-	else ulElement.lastElementChild.classList.remove('disabled')
-}
 
 async function handleFilterChange(filterName, filterValue) {
 	try {
@@ -67,58 +16,11 @@ async function handleFilterChange(filterName, filterValue) {
 
 		history.pushState({}, '', url)
 		const { data, pagination } = await postApi.getAll(url.searchParams)
-		renderPostList(data)
-		renderPagination(pagination)
+		renderPostList('postsList', data)
+		renderPagination('postsPagination', pagination)
 	} catch (error) {
 		throw new Error('Fail to load pagination')
 	}
-}
-
-function handlePrevClick(e) {
-	e.preventDefault()
-	const ulPagination = getPostPagination()
-	const page = ulPagination.dataset.page || 1
-	handleFilterChange('_page', +page - 1)
-}
-
-function handleNextClick(e) {
-	e.preventDefault()
-	const ulPagination = getPostPagination()
-	const page = ulPagination.dataset.page || 1
-	handleFilterChange('_page', +page + 1)
-}
-
-function initPagination() {
-	const ul = getPostPagination()
-	if (!ul) return
-
-	const prevElm = ul.firstElementChild?.firstElementChild
-	if (prevElm) prevElm.addEventListener('click', handlePrevClick)
-
-	const nextElm = ul.lastElementChild?.firstElementChild
-	if (nextElm) nextElm.addEventListener('click', handleNextClick)
-}
-
-function initQueryParams() {
-	const url = new URL(window.location)
-	if (!url.searchParams.get('_page')) url.searchParams.set('_page', 1)
-	if (!url.searchParams.get('_limit')) url.searchParams.set('_limit', 6)
-	history.pushState({}, '', url)
-}
-
-function initSearch() {
-	const searchInput = document.getElementById('searchInput')
-	if (!searchInput) return
-
-	const url = new URL(window.location)
-	console.log(url.searchParams)
-	if (url.searchParams.get('title_like')) {
-		searchInput.value = url.searchParams.get('title_like')
-	}
-	const searchText = debounce((event) => handleFilterChange('title_like', event.target.value), 500)
-	searchInput.addEventListener('input', (event) => {
-		searchText(event)
-	})
 }
 
 ;(async () => {
@@ -128,11 +30,19 @@ function initSearch() {
 		if (!url.searchParams.get('_limit')) url.searchParams.set('_limit', 6)
 		history.pushState({}, '', url)
 		const queryParams = url.searchParams
-		initSearch()
-		initPagination()
+		initSearch({
+			elementId: 'searchInput',
+			defaultParams: queryParams,
+			onChange: (value) => handleFilterChange('title_like', value),
+		})
+		initPagination({
+			elementId: 'postsPagination',
+			defaultParams: queryParams,
+			onChange: (page) => handleFilterChange('_page', page),
+		})
 		const { data, pagination } = await postApi.getAll(queryParams)
-		renderPostList(data)
-		renderPagination(pagination)
+		renderPostList('postsList', data)
+		renderPagination('postsPagination', pagination)
 	} catch (error) {
 		console.log(error)
 	}
