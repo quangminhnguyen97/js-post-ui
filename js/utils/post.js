@@ -22,6 +22,12 @@ function createPostItem(data) {
 		})
 	}
 
+	const postElement = liElement.firstElementChild
+	if (postElement) {
+		postElement.addEventListener('click', () => {
+			window.location.assign(`post-detail.html?id=${data.id}`)
+		})
+	}
 	return liElement
 }
 
