@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import postApi from './api/postApi'
 import { getTextContent } from './utils'
+import { registerLightbox } from './utils/lightbox'
 
 function renderPostDetail(postData) {
 	getTextContent(document, '#postDetailTitle', postData.title)
@@ -29,6 +30,20 @@ function renderPostDetail(postData) {
 }
 
 ;(async () => {
+	registerLightbox({
+		modalId: 'lightbox',
+		imgSelector: 'lightboxImg',
+		preButton: 'lightBoxPrev',
+		nextButton: 'lightBoxNext',
+	})
+
+	registerLightbox({
+		modalId: 'lightbox',
+		imgSelector: 'lightboxImg',
+		preButton: 'lightBoxPrev',
+		nextButton: 'lightBoxNext',
+	})
+
 	try {
 		const params = new URLSearchParams(window.location.search)
 		const postId = params.get('id')
