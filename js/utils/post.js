@@ -24,9 +24,18 @@ function createPostItem(data) {
 
 	const postElement = liElement.firstElementChild
 	if (postElement) {
-		postElement.addEventListener('click', () => {
+		postElement.addEventListener('click', (e) => {
+			const menu = liElement.querySelector('[data-id="menu"')
+			if (menu.contains(e.target)) return
 			window.location.assign(`post-detail.html?id=${data.id}`)
 		})
+
+		const editBtn = postElement.querySelector('[data-id="edit"]')
+		if (editBtn) {
+			editBtn.addEventListener('click', () => {
+				window.location.assign(`add-edit-post.html?id=${data.id}`)
+			})
+		}
 	}
 	return liElement
 }
