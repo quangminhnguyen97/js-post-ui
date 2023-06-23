@@ -13,11 +13,11 @@ const postApi = {
 
 	createPost(data) {
 		const url = '/posts'
-		return axiosClient.post(url, { data })
+		return axiosClient.post(url, data)
 	},
 
 	updatePost(data) {
-		const url = '/posts'
+		const url = `/posts/${data.id}`
 		return axiosClient.patch(url, data)
 	},
 
