@@ -73,20 +73,46 @@ async function validatePostForm(form, formValues) {
 	return isValid
 }
 
+function showLoading(form) {
+	const saveBtn = form.querySelector('[name="save"]')
+	if (saveBtn) {
+		saveBtn.disabled = true
+		saveBtn.textContent = 'Saving...'
+	}
+}
+
+function hideLoading(form) {
+	const saveBtn = form.querySelector('[name="save"]')
+	if (saveBtn) {
+		saveBtn.disabled = false
+		saveBtn.textContent = 'Save'
+	}
+}
+
 export function form({ formId, formValue, onSubmit }) {
 	const formSelector = document.getElementById(formId)
 	if (!formSelector) return
 
+	let isSubmitting = false
+
 	setFormValues(formSelector, formValue)
 	formSelector.addEventListener('submit', async (e) => {
 		e.preventDefault()
+
+		if (isSubmitting) return
+
+		showLoading(formSelector)
+		isSubmitting = true
+
 		const formValues = getFormValues(formSelector)
 		formValues.id = formValue.id
 
 		const isValid = await validatePostForm(formSelector, formValues)
 		if (!isValid) return
 
-		// validatePostForm(formSelector, formValues)
-		onSubmit?.(formValues)
+		await onSubmit?.(formValues)
+
+		hideLoading(formSelector)
+		isSubmitting = false
 	})
 }
