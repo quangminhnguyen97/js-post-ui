@@ -37,7 +37,7 @@ function getPostSchema() {
 				(val) => val.split(' ').filter((x) => !!x && x.length >= 3).length >= 2
 			),
 		description: yup.string(),
-		imageUrl: yup.string().required('Please enter the URL image').url('Please enter the link'),
+		imageUrl: yup.string().required('Please enter the URL image'),
 	})
 }
 
@@ -90,6 +90,17 @@ function hideLoading(form) {
 	}
 }
 
+function attachChosseFile(formSelector) {
+	const inputElm = document.getElementById('formFile')
+	if (!inputElm) return
+	inputElm.addEventListener('change', (e) => {
+		const image = e.target.files[0]
+		const url = URL.createObjectURL(image)
+		setBackgroundImage(document, '#postHeroImage', url)
+		setFieldValues(formSelector, '[name="imageUrl"]', url)
+	})
+}
+
 function initImagery(formSelector) {
 	const buttonChange = document.getElementById('postChangeImage')
 	if (buttonChange) {
@@ -134,6 +145,7 @@ export function form({ formId, formValue, onSubmit }) {
 	setFormValues(formSelector, formValue)
 
 	initImagery(formSelector)
+	attachChosseFile(formSelector)
 	initRadioImage(formSelector)
 
 	formSelector.addEventListener('submit', async (e) => {

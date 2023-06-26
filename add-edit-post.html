@@ -90,21 +90,21 @@
 
             <div class="mb-3">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="imageChoices" value="picsum" id="picsumRadio"
-                  checked>
+                <input class="form-check-input" type="radio" name="imageChoices" value="picsum" id="picsumRadio">
                 <label class="form-check-label" for="picsumRadio">
                   Get random image
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="imageChoices" value="upload" id="uploadRadio">
+                <input class="form-check-input" type="radio" name="imageChoices" value="upload" id="uploadRadio"
+                  checked>
                 <label class="form-check-label" for="uploadRadio">
                   Upload image
                 </label>
               </div>
             </div>
 
-            <div class="form-group mb-3" name="imageSources" data-standfor="picsum">
+            <div class="form-group mb-3" name="imageSources" data-standfor="picsum" hidden>
               <label for="postChangeImage">Image</label>
               <input type="text" class="d-none" name="imageUrl">
               <div class="mt-2">
@@ -115,9 +115,9 @@
               <div class="invalid-feedback"></div>
             </div>
 
-            <div class="mb-3" name="imageSources" data-standfor="upload" hidden>
+            <div class="mb-3" name="imageSources" data-standfor="upload">
               <label for="formFile" class="form-label">No file chosen</label>
-              <input class="form-control" type="file" id="formFile">
+              <input class="form-control" type="file" id="formFile" accept="image/*">
             </div>
 
             <div class="text-center">
