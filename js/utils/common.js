@@ -15,3 +15,7 @@ export function setBackgroundImage(parentElement, queryParams, value) {
 	const targetElement = parentElement.querySelector(queryParams)
 	targetElement.style.backgroundImage = `url(${value})`
 }
+
+export function getRandomNumber(max) {
+	return Math.floor(Math.random() * max)
+}
