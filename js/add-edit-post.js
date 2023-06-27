@@ -1,12 +1,35 @@
 import postApi from './api/postApi'
 import { form, toast } from './utils'
 
+function removeUnnecessaryFields(formValues) {
+	const payload = { ...formValues }
+	if (payload.imageSource === 'picsum') {
+		delete payload.image
+	} else {
+		delete payload.imageUrl
+	}
+	delete payload.imageSource
+	if (!payload.id) delete payload.id
+	return payload
+}
+
+function jsonToObject(jsonObj) {
+	const form = new FormData()
+	for (const key in jsonObj) {
+		form.set(key, jsonObj[key])
+	}
+	return form
+}
+
 async function handleSubmitForm(formValues) {
 	try {
-		const postSaved = formValues.id ? await postApi.updatePost(formValues) : await postApi.createPost(formValues)
+		const payload = removeUnnecessaryFields(formValues)
+		const formData = jsonToObject(payload)
+		const postSaved = formValues.id
+			? await postApi.updatePostForm(formData)
+			: await postApi.createPostForm(formData)
 
 		toast.success('Saved post successfully ^^')
-
 		setTimeout(() => {
 			window.location.assign(`post-detail.html?id=${postSaved.id}`)
 		}, 2000)
@@ -34,6 +57,6 @@ async function handleSubmitForm(formValues) {
 			onSubmit: (values) => handleSubmitForm(values),
 		})
 	} catch (error) {
-		console.log('Error add edit form', error)
+		toast.error(`Error: ${error}`)
 	}
 })()

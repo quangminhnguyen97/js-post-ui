@@ -1,6 +1,11 @@
 import { getRandomNumber, getTextContent, setBackgroundImage, setFieldValues } from './common'
 import * as yup from 'yup'
 
+const ImageSource = {
+	PICSUM: 'picsum',
+	UPLOAD: 'upload',
+}
+
 function setFormValues(formSelector, formValue) {
 	setFieldValues(formSelector, '[name="title"]', formValue?.title)
 	setFieldValues(formSelector, '[name="author"]', formValue?.author)
@@ -37,7 +42,32 @@ function getPostSchema() {
 				(val) => val.split(' ').filter((x) => !!x && x.length >= 3).length >= 2
 			),
 		description: yup.string(),
-		imageUrl: yup.string().required('Please enter the URL image'),
+		imageSource: yup
+			.string()
+			.oneOf([ImageSource.PICSUM, ImageSource.UPLOAD], 'Invalid image source'),
+
+		imageUrl: yup.string().when('imageSource', {
+			is: (val) => val === ImageSource.PICSUM,
+			then: (schema) =>
+				schema.test(
+					'required',
+					'Please enter the URL image',
+					(val) => !!val.includes('https')
+				),
+		}),
+
+		image: yup.mixed().when('imageSource', {
+			is: (val) => val === ImageSource.UPLOAD,
+			then: (schema) =>
+				schema
+					.test('required', 'Please select an image to upload', (value) =>
+						Boolean(value?.name)
+					)
+					.test('maximum upload', 'File size must be lower 5MB', (file) => {
+						const MAX_FILE_SIZE = 5 * 1024 * 1024
+						return file.size <= MAX_FILE_SIZE
+					}),
+		}),
 	})
 }
 
@@ -51,11 +81,10 @@ function setFieldError(form, name, error) {
 
 async function validatePostForm(form, formValues) {
 	try {
-		;['title', 'author', 'imageUrl'].forEach((name) => setFieldError(form, name, ''))
+		;['title', 'author', 'imageUrl', 'image'].forEach((name) => setFieldError(form, name, ''))
 		const schema = getPostSchema()
 		await schema.validate(formValues, { abortEarly: false })
 	} catch (error) {
-		// TODO: Study about validation in JS
 		const errorLog = {}
 		if (error.name === 'ValidationError') {
 			for (const validationError of error.inner) {
@@ -98,7 +127,6 @@ function attachChosseFile(formSelector) {
 		if (!image) return
 		const url = URL.createObjectURL(image)
 		setBackgroundImage(document, '#postHeroImage', url)
-		// setFieldValues(formSelector, '[name="imageUrl"]', url)
 	})
 }
 

@@ -11,14 +11,28 @@ const postApi = {
 		return axiosClient.get(`${url}/${id}`)
 	},
 
-	createPost(data) {
-		const url = '/posts'
-		return axiosClient.post(url, data)
+	// createPost(data) {
+	// 	const url = '/posts'
+	// 	return axiosClient.post(url, data)
+	// },
+
+	// updatePost(data) {
+	// 	const url = `/posts/${data.id}`
+	// 	return axiosClient.patch(url, data)
+	// },
+
+	createPostForm(data) {
+		const url = '/with-thumbnail/posts'
+		return axiosClient.post(url, data, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+		})
 	},
 
-	updatePost(data) {
-		const url = `/posts/${data.id}`
-		return axiosClient.patch(url, data)
+	updatePostForm(data) {
+		const url = `/with-thumbnail/posts/${data.get('id')}`
+		return axiosClient.patch(url, data, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+		})
 	},
 
 	deletePost(id) {
