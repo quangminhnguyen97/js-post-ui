@@ -119,6 +119,23 @@ function hideLoading(form) {
 	}
 }
 
+async function validateFormField(form, value, name) {
+	try {
+		setFieldError(form, name, '')
+
+		const schema = getPostSchema()
+		await schema.validateAt(name, value)
+	} catch (error) {
+		setFieldError(form, name, error)
+	}
+
+	const selectElm = form.querySelector(`[name="${name}"]`)
+	if (selectElm && !selectElm.checkValidity()) {
+		const containerElm = selectElm.parentElement
+		containerElm.classList.add('was-validated')
+	}
+}
+
 function attachChosseFile(formSelector) {
 	const inputElm = formSelector.querySelector('[name="image"]')
 	if (!inputElm) return
@@ -127,6 +144,7 @@ function attachChosseFile(formSelector) {
 		if (!image) return
 		const url = URL.createObjectURL(image)
 		setBackgroundImage(document, '#postHeroImage', url)
+		validateFormField(formSelector, { imageSource: ImageSource.UPLOAD, image: image }, 'image')
 	})
 }
 
@@ -163,6 +181,15 @@ function initRadioImage(formSelector) {
 	})
 }
 
+function initValidateFormField(formSelector) {
+	;['title', 'author'].forEach((name) => {
+		const elm = formSelector.querySelector(`[name="${name}"]`)
+		elm.addEventListener('input', (event) => {
+			validateFormField(formSelector, { [name]: event.target.value }, name)
+		})
+	})
+}
+
 export function form({ formId, formValue, onSubmit }) {
 	const formSelector = document.getElementById(formId)
 	if (!formSelector) return
@@ -174,6 +201,7 @@ export function form({ formId, formValue, onSubmit }) {
 	initImagery(formSelector)
 	attachChosseFile(formSelector)
 	initRadioImage(formSelector)
+	initValidateFormField(formSelector)
 
 	formSelector.addEventListener('submit', async (e) => {
 		e.preventDefault()
