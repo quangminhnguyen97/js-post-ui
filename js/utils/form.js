@@ -91,13 +91,14 @@ function hideLoading(form) {
 }
 
 function attachChosseFile(formSelector) {
-	const inputElm = document.getElementById('formFile')
+	const inputElm = formSelector.querySelector('[name="image"]')
 	if (!inputElm) return
 	inputElm.addEventListener('change', (e) => {
 		const image = e.target.files[0]
+		if (!image) return
 		const url = URL.createObjectURL(image)
 		setBackgroundImage(document, '#postHeroImage', url)
-		setFieldValues(formSelector, '[name="imageUrl"]', url)
+		// setFieldValues(formSelector, '[name="imageUrl"]', url)
 	})
 }
 
@@ -115,21 +116,19 @@ function initImagery(formSelector) {
 }
 
 function showHideOptions(form, value) {
-	const imgSourcesList = form.querySelectorAll(`[name="imageSources"]`)
-
-	imgSourcesList.forEach((div) => {
-		const needToShow = value === div.dataset.standfor
-		console.log(value, div.dataset.standfor, needToShow)
-		if (!needToShow) div.hidden = true
-		else div.hidden = false
+	const imgSourcesList = form.querySelectorAll(`[data-id="imageSource"]`)
+	imgSourcesList.forEach((control) => {
+		const needToShow = value === control.dataset.standfor
+		if (!needToShow) control.hidden = true
+		else control.hidden = false
 	})
 }
 
 function initRadioImage(formSelector) {
-	const inputList = document.querySelectorAll('[name="imageChoices"]')
-	if (!inputList) return
+	const radioList = formSelector.querySelectorAll('[name="imageSource"]')
+	if (!radioList) return
 
-	inputList.forEach((choice) => {
+	radioList.forEach((choice) => {
 		choice.addEventListener('change', (event) => {
 			showHideOptions(formSelector, event.target.value)
 		})
