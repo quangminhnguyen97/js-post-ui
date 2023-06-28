@@ -1,3 +1,19 @@
+nav {
+	background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+}
+
+main {
+	background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+}
+
+footer {
+	background-image: linear-gradient(to top, #fed6e3 0%, #a8edea 100%);
+}
+
+.posts-nav {
+	background-image: none;
+}
+
 .posts-section {
 	padding: 3rem 0;
 }
@@ -13,17 +29,15 @@
 	overflow: hidden;
 }
 
-/* .tooltip {
-	display: inline-block;
-	position: relative;
-	border-bottom: 1px dotted #666;
-	text-align: left;
-} */
-
 /* Add box shadow on card hover */
 .posts-section .post-item:hover {
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 	cursor: pointer;
+}
+
+.posts-section .post-item {
+	box-shadow: 7px 9px 11px -3px rgba(0, 0, 0, 0.71);
+	-webkit-box-shadow: 7px 9px 11px -3px rgba(0, 0, 0, 0.71);
+	-moz-box-shadow: 7px 9px 11px -3px rgba(0, 0, 0, 0.71);
 }
 
 /* Zoom card image when hover on card */
@@ -95,6 +109,10 @@
 	color: white;
 	background-color: black;
 	opacity: 1;
+}
+
+.form-control-styled:focus {
+	box-shadow: none;
 }
 
 /**************

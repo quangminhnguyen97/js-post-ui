@@ -23,6 +23,7 @@
   <!-- Internal CSS -->
   <link rel="stylesheet" href="/styles/main.css" />
   <link rel="stylesheet" href="/styles/home.css" />
+  <link rel="stylesheet" href="/styles/micromodal.css" />
 </head>
 
 <body>
@@ -66,12 +67,40 @@
     </li>
   </template>
 
+  <div class="modal micromodal-slide" id="deleteConfirm" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+        <header class="modal__header">
+          <h2 class="modal__title" id="modal-1-title">
+            Hmmm?
+          </h2>
+          <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <div class="modal__content" id="modal-1-content">
+          <p>
+            Do you want to delete this post?
+          </p>
+        </div>
+        <div class="modal__footer">
+          <button id="yesBtn" class="modal__btn modal__btn-primary">Yes</button>
+          <button id="noBtn" class="modal__btn modal__btn-danger" data-micromodal-close
+            aria-label="Close this dialog window">No</button>
+          <div id="loading" class="text-center hiding">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <header>
     <!-- Navigation
       - Please note that we use an empty item to make sure that we always have 3 flex-items
         so logo is at centered, and the left and the right item can be optional by leaving it empty
     -->
-    <nav class="top-nav shadow-sm py-3">
+    <nav class="top-nav shadow-sm py-3 nav-custom">
       <div class="container">
         <ul class="nav justify-content-between align-items-center">
           <li class="nav-item">
@@ -100,24 +129,27 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="https://picsum.photos/id/10/1378/300" class="d-block w-100" alt="forrest">
+        <img name="carousel-image" src="https://picsum.photos/id/10/1378/300" class="d-block w-100"
+          alt="carousel-image">
         <div class="carousel-caption d-none d-md-block">
-          <h5>First slide label</h5>
-          <p>Some representative placeholder content for the first slide.</p>
+          <h5>Final JS Project</h5>
+          <p>Create by JS</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="https://picsum.photos/id/39/1378/300" class="d-block w-100" alt="so lonely">
+        <img name="carousel-image" src="https://picsum.photos/id/39/1378/300" class="d-block w-100"
+          alt="carousel-image">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Second slide label</h5>
-          <p>Some representative placeholder content for the second slide.</p>
+          <h5>Some libraries</h5>
+          <p>axios, dayjs, lodash, micromodal, toastify, yup</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="https://picsum.photos/id/42/1378/300" class="d-block w-100" alt="prepare">
+        <img name="carousel-image" src="https://picsum.photos/id/42/1378/300" class="d-block w-100"
+          alt="carousel-image">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Third slide label</h5>
-          <p>Some representative placeholder content for the third slide.</p>
+          <h5>Too long to done this project</h5>
+          <p>But in the end, I'm still done.</p>
         </div>
       </div>
     </div>
@@ -138,8 +170,8 @@
 
         <div class="input-group mb-3">
           <span class="input-group-text" id="search">Search</span>
-          <input type="text" class="form-control" id="searchInput" placeholder="Search titles..." aria-label="Search"
-            aria-describedby="Search">
+          <input type="text" class="form-control form-control-styled" id="searchInput" placeholder="Search titles..."
+            aria-label="Search" aria-describedby="Search">
         </div>
 
         <!-- Posts list -->
@@ -154,9 +186,6 @@
                 <span aria-hidden="true">&laquo; Prev</span>
               </a>
             </li>
-            <!-- <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li> --->
             <li class="page-item">
               <a class="page-link" href="#" aria-label="Next">
                 <span aria-hidden="true">Next &raquo;</span>

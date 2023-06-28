@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { getTextContent } from './common'
+import postApi from '../api/postApi'
 
 dayjs.extend(relativeTime)
 function createPostItem(data) {
@@ -34,6 +35,17 @@ function createPostItem(data) {
 		if (editBtn) {
 			editBtn.addEventListener('click', () => {
 				window.location.assign(`add-edit-post.html?id=${data.id}`)
+			})
+		}
+
+		const delBtn = postElement.querySelector('[data-id="remove"]')
+		if (delBtn) {
+			delBtn.addEventListener('click', () => {
+				let event = new CustomEvent('delete-post', {
+					bubbles: true,
+					detail: data,
+				})
+				delBtn.dispatchEvent(event)
 			})
 		}
 	}

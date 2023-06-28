@@ -6,7 +6,11 @@ import { registerLightbox } from './utils/lightbox'
 function renderPostDetail(postData) {
 	getTextContent(document, '#postDetailTitle', postData.title)
 	getTextContent(document, '#postDetailAuthor', postData.author)
-	getTextContent(document, '#postDetailTimeSpan', dayjs(postData.createdAt).format('- DD-MM-YYYY HH:mm'))
+	getTextContent(
+		document,
+		'#postDetailTimeSpan',
+		dayjs(postData.createdAt).format('- DD-MM-YYYY HH:mm')
+	)
 	getTextContent(document, '#postDetailDescription', postData.description)
 
 	// background
@@ -30,13 +34,6 @@ function renderPostDetail(postData) {
 }
 
 ;(async () => {
-	registerLightbox({
-		modalId: 'lightbox',
-		imgSelector: 'lightboxImg',
-		preButton: 'lightBoxPrev',
-		nextButton: 'lightBoxNext',
-	})
-
 	registerLightbox({
 		modalId: 'lightbox',
 		imgSelector: 'lightboxImg',
